@@ -1,0 +1,86 @@
+FNF Agent Stack  —  Quick Reference Card
+Research  |  Content Calendar  |  WordPress Publishing
+Mark R. Bracking
+funnynfunny.com  |  March 2026
+
+
+DAILY COMMANDS
+
+Open terminal in correct folder
+File Explorer > fnf-agents folder
+Click address bar > type: powershell > Enter
+
+
+Research Agent
+python run_agents.py --agent research --topic "your topic"
+
+
+WordPress Agent — create draft
+python run_agents.py --agent wordpress
+
+
+Check post status and IDs
+python check_posts.py
+
+
+Publish a draft post (replace 291 and title)
+python -c "from agent_3_wordpress import WordPressAgent; a = WordPressAgent(); print(a._publish_wp_post(291, 'Title Here'))"
+
+
+Full pipeline (all 3 agents)
+python run_agents.py --all --topic "your topic"
+
+
+
+API KEYS  (.env file)
+
+Key
+Service
+ANTHROPIC_API_KEY
+console.anthropic.com
+TAVILY_API_KEY
+tavily.com > Dashboard
+WP_APP_PASSWORD
+WP Admin > Users > Profile
+WP_USERNAME
+Your WP admin email
+CONTENT_CALENDAR_SHEET
+Google Sheet ID from URL
+
+
+QUICK TROUBLESHOOTING
+
+Symptom
+SOAP Card
+.env not loading
+SOAP-001
+Tavily 401 error
+SOAP-003
+WP returns HTML
+SOAP-004
+WP 401 error
+SOAP-005
+Post not in WP
+SOAP-006
+SyntaxError
+SOAP-008
+--publish error
+SOAP-012
+
+
+SECURITY RULES
+
+Never commit .env to GitHub
+Never share API keys in chat or email
+Use Application Password for WordPress — not login password
+Always review draft before publishing
+Agent never publishes without YES confirmation
+
+WORDPRESS SETTINGS
+
+Permalinks: Post name (Settings > Permalinks)
+REST API test: funnynfunny.com/wp-json/wp/v2/posts
+If REST API returns HTML: fix permalinks (SOAP-004)
+
+
+Operating Manual: fnf-operating-manual.docx  |  Troubleshooting: fnf-soap-guide.docx  |  funnynfunny.com
