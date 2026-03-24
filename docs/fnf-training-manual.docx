@@ -1,0 +1,728 @@
+
+FNF Agent Stack
+Training Manual
+
+Standard Operating Procedures with Learning Objectives and Practice Exercises
+
+Project
+Funny not Funny — funnynfunny.com
+Document Type
+Training Manual
+Author
+Mark R. Bracking
+Version
+1.0  —  March 2026
+Based On
+FNF Agent Stack Operating Manual v1.0
+Classification
+Internal Use — Training Purposes
+
+
+This document contains learning objectives and practice exercises for each SOP.
+
+How to Use This Training Manual
+This manual teaches you to operate the FNF Agent Stack from scratch. Each SOP (Standard Operating Procedure) follows the same structure:
+
+Section
+Purpose
+Learning Objectives
+What you will know and be able to do after completing this SOP
+Overview Table
+Quick reference — purpose, prerequisites, expected output, time
+Steps
+The procedure itself — follow in order, do not skip steps
+Practice Exercise
+A hands-on scenario to practise what you just learned
+Knowledge Check
+Questions to confirm understanding before moving on
+
+
+Recommended Learning Path
+Complete SOPs in order on your first pass through the manual. Once familiar, use individual SOPs as reference for specific tasks.
+
+Order
+SOP
+Skill Built
+Time
+1st
+SOP-001  Open the Terminal
+Foundation skill for everything
+15 min
+2nd
+SOP-002  Run Research Agent
+Live web research
+30 min
+3rd
+SOP-003  Run WordPress Agent
+Content creation pipeline
+30 min
+4th
+SOP-006  Check Post Status
+Verification and diagnostics
+15 min
+5th
+SOP-004  Publish via WP Admin
+Editorial review and publish
+20 min
+6th
+SOP-005  Publish via Command Line
+Command-line publishing
+20 min
+7th
+SOP-007  Full Pipeline
+End-to-end operation
+45 min
+8th
+SOP-008  Adding API Keys
+Configuration management
+15 min
+9th
+SOP-009  Adding New Agents
+System extension
+60 min
+
+
+SOP-001  |  Opening the Terminal
+LEARNING OBJECTIVES
+By the end of this SOP you will be able to:
+Locate the fnf-agents project folder on your Windows 11 machine
+Open PowerShell directly inside the correct folder using the address bar method
+Verify the terminal prompt confirms you are in the right location
+Explain why the terminal must be opened from the correct folder
+
+
+Purpose
+Open PowerShell in the correct project folder before running any agent
+Why it matters
+The .env file containing all API keys only loads when PowerShell is opened from the fnf-agents folder. Opening from anywhere else means agents cannot authenticate and will fail immediately.
+Time required
+30 seconds
+
+
+Steps
+Open File Explorer — press Windows key + E
+Navigate to: C:\Projects\FunnyNotFunny\fnf-agents\
+Click the address bar at the top of the File Explorer window
+Type: powershell — then press Enter
+A blue PowerShell window opens
+Confirm the prompt shows exactly: PS C:\Projects\FunnyNotFunny\fnf-agents>
+
+NOTE: If the prompt shows PS C:\Windows\System32> or any other path — close it and repeat from Step 1. The folder path in the prompt must match your fnf-agents folder.
+
+PRACTICE EXERCISE  —  Opening the Terminal
+Scenario:
+You are starting a new work session and need to run the Research Agent to research wolf conservation in the Pacific Northwest. Before you can run any agent you must open the terminal correctly.
+Your Tasks:
+Close any open PowerShell windows
+Open File Explorer and navigate to your fnf-agents folder
+Open PowerShell using the address bar method described in this SOP
+Verify the prompt shows the correct path
+Type: python --version and press Enter to confirm Python is working
+Success Criteria:
+PowerShell prompt shows PS C:\Projects\FunnyNotFunny\fnf-agents>
+python --version returns Python 3.x.x without errors
+No errors or warnings appear when opening the terminal
+
+
+KNOWLEDGE CHECK
+Answer these before moving to the next SOP:
+1.  Why must PowerShell be opened from the fnf-agents folder specifically?
+2.  What does the correct prompt look like when the terminal is open in the right location?
+3.  What happens if you open PowerShell from the Start Menu and then navigate to the folder manually?
+
+Answers are in Appendix A at the end of this manual.
+
+
+SOP-002  |  Running the Research Agent
+LEARNING OBJECTIVES
+By the end of this SOP you will be able to:
+Run the Research Agent with a topic of your choice from the command line
+Read and interpret the agent loop output — understanding what each line means
+Locate the research brief saved to the output/ folder
+Identify the cause area connections in a research brief
+Explain the difference between running the agent with and without Tavily configured
+
+
+Purpose
+Research a topic and save a structured brief to the output/ folder
+Prerequisites
+Terminal open in fnf-agents folder (SOP-001 complete), ANTHROPIC_API_KEY and TAVILY_API_KEY set in .env
+Output
+Markdown research brief saved to output/ folder
+Time required
+2-5 minutes depending on topic complexity
+
+
+Understanding the Agent Loop Output
+When the Research Agent runs you will see output like this in PowerShell:
+
+[Loop 1] Thinking...
+[Tool] Calling: web_search
+       Input:  { "query": "wetlands North America 2024" }
+       Result: Search results for: wetlands...
+[Loop 2] Thinking...
+[Done] Task complete after 4 loop(s)
+
+Each line tells you what Claude is doing. Thinking means Claude is deciding what to do next. Tool Calling means it is running a search or saving a file. Done means the task is complete.
+
+Steps
+Open terminal using SOP-001
+Run the command below — replace the topic with your subject:
+
+python run_agents.py --agent research --topic "your topic here"
+
+Watch the output — you will see 3-5 search loops run automatically
+When you see [Done] Task complete — the brief has been saved
+Open File Explorer and navigate to C:\Projects\FunnyNotFunny\fnf-agents\output\
+Open the .md file in Notepad or VS Code to review the research brief
+
+NOTE: The agent runs 3-5 web searches automatically without any input from you. The more specific your topic, the more focused the research will be.
+
+PRACTICE EXERCISE  —  Research Agent — First Run
+Scenario:
+The Funny not Funny content team needs a research brief on the impact of microplastics on marine wildlife. This will be used to draft a blog post connecting animal welfare and environmental justice.
+Your Tasks:
+Open the terminal using SOP-001
+Run the research agent with the topic: microplastics marine wildlife impact
+Watch the full output and count how many tool calls are made
+When complete, open the research brief in the output/ folder
+Read the brief and identify: primary cause area, secondary cause area connections, and 2 story angles suggested
+Success Criteria:
+Agent completes without errors and shows [Done] Task complete
+A .md file appears in the output/ folder
+Research brief contains Key Facts, Why It Matters, and Story Angles sections
+You can identify at least one connection between cause areas in the brief
+You can name 2 specific story angles suggested by the agent
+
+
+PRACTICE EXERCISE  —  Research Agent — Topic Variation
+Scenario:
+Now practise running the research agent with a different topic to build familiarity with the command.
+Your Tasks:
+Run the research agent for a second topic of your choice from FNF's cause areas
+Suggested topics: UNDRIP Indigenous sovereignty, factory farming water pollution, MMIW crisis Canada
+Compare the two research briefs — which cause areas does each one touch?
+Note the filename format used for each saved brief
+Success Criteria:
+Second research brief saved successfully to output/ folder
+You can explain how the filename relates to the topic
+You can identify how the two briefs differ in cause area coverage
+
+
+KNOWLEDGE CHECK
+Answer these before moving to the next SOP:
+1.  What does [Loop 3] Thinking... mean when you see it in the terminal output?
+2.  Where are research briefs saved after the agent completes?
+3.  What is the difference in research quality when Tavily is configured versus when it is not?
+4.  Why does the agent run multiple web searches rather than just one?
+
+Answers are in Appendix A at the end of this manual.
+
+
+SOP-003  |  Running the WordPress Publishing Agent
+LEARNING OBJECTIVES
+By the end of this SOP you will be able to:
+Run the WordPress Agent to transform a research brief into a draft post
+Read the agent output to confirm the post was created and note the Post ID
+Locate the draft post in WordPress Admin
+Explain why posts are always created as drafts and never published automatically
+Identify the FNF brand standards applied by the agent
+
+
+Purpose
+Transform a research brief into a WordPress draft post
+Prerequisites
+Research brief in output/ folder, WordPress Application Password in .env, Permalinks set to Post name
+Output
+Draft post in WordPress Admin — Posts > All Posts
+Time required
+1-3 minutes
+
+
+What the Agent Does
+The WordPress Agent performs five tasks in sequence: lists available research files, reads the most recent brief, checks WordPress categories, checks recent posts for duplicates, then creates the draft post via the WordPress REST API.
+
+Steps
+Confirm a research brief exists in output/ (run SOP-002 first if needed)
+Open terminal using SOP-001
+Run the command:
+
+python run_agents.py --agent wordpress
+
+Watch the output — the agent will show 5-6 loops
+Look for the success message and note the Post ID:
+
+Draft post created successfully!
+   Post ID: 291
+   Status:  Draft
+
+Write down the Post ID — you will need it to publish
+Go to funnynfunny.com/wp-admin > Posts > All Posts
+Confirm the draft post appears with a Draft label
+
+NOTE: Always note the Post ID from the terminal output immediately. If you miss it, run python check_posts.py to retrieve it.
+
+PRACTICE EXERCISE  —  WordPress Agent — Create a Draft
+Scenario:
+You have just completed a research brief on microplastics and marine wildlife using SOP-002. Now you need to turn that brief into a WordPress draft post ready for editorial review.
+Your Tasks:
+Open the terminal using SOP-001
+Run the WordPress agent
+Watch the full output and identify which research file the agent chose
+Record the Post ID from the success message
+Log into funnynfunny.com/wp-admin and find the draft post
+Read the first paragraph of the post and check it against the FNF brand voice rules
+Success Criteria:
+WordPress agent completes without errors
+You have the Post ID written down
+Draft post appears in WordPress Admin > Posts > All Posts
+Post title is compelling and under 60 characters
+First paragraph opens with a fact or question, not guilt or alarmist language
+Post ends with a clear call to action
+
+
+KNOWLEDGE CHECK
+Answer these before moving to the next SOP:
+1.  Why does the WordPress Agent always create posts as drafts instead of publishing directly?
+2.  What should you do immediately after the WordPress Agent completes successfully?
+3.  What WordPress setting must be configured to Post name for the agent to work?
+4.  What does the agent check before creating the post to avoid duplicate content?
+
+Answers are in Appendix A at the end of this manual.
+
+
+SOP-004  |  Publishing via WordPress Admin
+LEARNING OBJECTIVES
+By the end of this SOP you will be able to:
+Navigate to a draft post in WordPress Admin and review its content
+Apply the FNF brand voice checklist before publishing
+Publish a post from the WordPress editor
+Confirm a post is live by visiting the published URL
+
+
+Purpose
+Review and publish a draft post from WordPress Admin
+Prerequisites
+Draft post exists in WordPress (SOP-003 complete)
+Time required
+5-10 minutes including review
+
+
+Brand Voice Checklist — Review Before Every Publish
+
+
+Check
+[ ]
+No guilt language — no 'you should feel ashamed' or 'if you care you will...'
+[ ]
+No alarmist framing — no 'it's too late' or 'the world is ending'
+[ ]
+Opens with a fact, question, or observation — not outrage
+[ ]
+Jargon and acronyms explained on first use
+[ ]
+Ends with ONE clear, achievable call to action
+[ ]
+Cause area connections are named where relevant
+[ ]
+Correct WordPress category assigned
+
+
+Steps
+Log into funnynfunny.com/wp-admin
+Go to Posts > All Posts
+Find the draft post — it shows a Draft label next to the title
+Click the post title to open the WordPress editor
+Read the full post and apply the Brand Voice Checklist above
+Make any edits needed — fix tone, update facts, improve the headline
+Confirm the correct Category is assigned in the right sidebar
+Click the Publish button in the top right corner
+Click Publish again on the confirmation popup
+Click View Post to confirm the post is live at its URL
+
+PRACTICE EXERCISE  —  Editorial Review and Publish
+Scenario:
+The microplastics draft post has been created by the WordPress Agent. Before it goes live on funnynfunny.com you need to review it as an editor would and publish it if it meets the brand standards.
+Your Tasks:
+Navigate to the draft post in WordPress Admin
+Work through every item on the Brand Voice Checklist
+Note any items that fail the checklist and make the necessary edits
+Confirm the post has the correct category assigned
+Publish the post
+Visit the live URL and confirm everything looks correct on the public-facing page
+Success Criteria:
+All 7 Brand Voice Checklist items pass
+Post has a correct category assigned
+Post is published and visible at its public URL
+You can articulate what edits (if any) you made and why
+
+
+KNOWLEDGE CHECK
+Answer these before moving to the next SOP:
+1.  Name three items on the FNF Brand Voice Checklist
+2.  What should you do if a post fails one of the brand voice checks?
+3.  Where in WordPress Admin do you find draft posts?
+
+Answers are in Appendix A at the end of this manual.
+
+
+SOP-005  |  Publishing via Command Line
+LEARNING OBJECTIVES
+By the end of this SOP you will be able to:
+Find a Post ID using check_posts.py
+Run the publish command with the correct Post ID and title
+Respond correctly to the confirmation prompt
+Verify the post is live after publishing via command line
+
+
+Purpose
+Publish a draft post directly from PowerShell using the Post ID
+Prerequisites
+Draft post in WordPress, Post ID known
+Time required
+1 minute
+
+
+Steps
+Open terminal using SOP-001
+Run check_posts.py to find your Post ID:
+
+python check_posts.py
+
+Note the ID number next to your draft post in the output
+Run the publish command — replace 291 with your Post ID and update the title:
+
+python -c "from agent_3_wordpress import WordPressAgent; a = WordPressAgent(); print(a._publish_wp_post(291, 'Your Post Title Here'))"
+
+Read the confirmation prompt carefully — verify the Post ID and Title are correct
+Type YES and press Enter only if everything is correct
+Copy the URL from the output and open it in your browser to confirm
+
+NOTE: Only type YES after reviewing the post in WordPress Admin. Type anything other than YES to cancel safely. This action is immediate and cannot be undone from the command line.
+
+PRACTICE EXERCISE  —  Command Line Publishing
+Scenario:
+You have a draft post ready to publish but you want to use the command line workflow instead of WordPress Admin. You need to find the Post ID, run the publish command, and verify the result.
+Your Tasks:
+Run check_posts.py and identify the Post ID of your draft post
+Run the publish command with the correct ID and title
+Read the confirmation prompt and verify the details before typing YES
+Type YES to publish
+Copy the URL from the output and verify the post is live
+Success Criteria:
+check_posts.py shows your draft post with its correct ID
+Confirmation prompt shows the correct Post ID and title
+Post publishes successfully with a live URL in the output
+Post is visible and correctly formatted at the public URL
+
+
+KNOWLEDGE CHECK
+Answer these before moving to the next SOP:
+1.  What command do you run to find a Post ID?
+2.  What do you type to cancel the publish command safely?
+3.  What two pieces of information should you verify in the confirmation prompt before typing YES?
+
+Answers are in Appendix A at the end of this manual.
+
+
+SOP-006  |  Checking Post Status
+LEARNING OBJECTIVES
+By the end of this SOP you will be able to:
+Run check_posts.py and interpret the output
+Identify posts by their status: draft, publish, pending, private
+Use check_posts.py to retrieve Post IDs when needed
+
+
+Steps
+Open terminal using SOP-001
+Run:
+
+python check_posts.py
+
+Read the output — posts are grouped by status
+Note the ID of any post you need to act on
+
+PRACTICE EXERCISE  —  Status Check
+Scenario:
+You ran the WordPress Agent earlier but forgot to note the Post ID. You now need to find it.
+Your Tasks:
+Run check_posts.py
+Identify the correct post from the output
+Note its ID and status
+Explain what each status label means
+Success Criteria:
+check_posts.py runs without errors
+You can identify your post and its ID
+You can explain the difference between Draft and Publish status
+
+
+KNOWLEDGE CHECK
+Answer these before moving to the next SOP:
+1.  What are the four post statuses that check_posts.py checks?
+2.  What does it mean if check_posts.py shows none found under every status?
+
+Answers are in Appendix A at the end of this manual.
+
+
+SOP-007  |  Running the Full Pipeline
+LEARNING OBJECTIVES
+By the end of this SOP you will be able to:
+Run all three agents in sequence using a single command
+Monitor the pipeline output across all three agent stages
+Verify outputs at each stage: research brief, calendar update, WordPress draft
+Describe the full content production flow from topic to published post
+
+
+Purpose
+Run all three agents in sequence — research, content calendar, WordPress
+Prerequisites
+All three agents configured, Google Sheets credentials set up for Agent 2
+Time required
+10-15 minutes end to end
+
+
+Steps
+Open terminal using SOP-001
+Run the full pipeline with your topic:
+
+python run_agents.py --all --topic "your topic here"
+
+Watch the three stages run in sequence — Research > Content Calendar > WordPress
+After completion, verify all three outputs:
+   output/ folder contains a new research brief
+   Google Sheet calendar has new topic suggestions
+   WordPress Admin > Posts > All Posts has a new draft
+Review the draft using the Brand Voice Checklist (SOP-004)
+Publish when ready using SOP-004 or SOP-005
+
+PRACTICE EXERCISE  —  Full Pipeline — End to End
+Scenario:
+You want to produce a complete piece of content on wolf reintroduction in the Cascade Mountains in one pipeline run. This is a topic that connects environmental justice, Indigenous rights, and animal welfare.
+Your Tasks:
+Run the full pipeline with the topic: wolf reintroduction Cascades Indigenous co-management
+Monitor all three stages as they run
+After completion verify all three outputs exist
+Read the research brief and identify all three cause area connections
+Review the WordPress draft using the Brand Voice Checklist
+Publish the post when satisfied
+Success Criteria:
+Pipeline runs all three agents without errors
+Research brief saved to output/ folder
+Google Sheet updated with at least one new calendar entry
+WordPress draft created with correct formatting
+You can name all three cause areas the topic connects
+Post passes the full Brand Voice Checklist
+Post is live on funnynfunny.com
+
+
+KNOWLEDGE CHECK
+Answer these before moving to the next SOP:
+1.  What are the three agents that run in the full pipeline and in what order?
+2.  Where do you verify each of the three pipeline outputs?
+3.  What do you do after the pipeline completes before publishing?
+
+Answers are in Appendix A at the end of this manual.
+
+
+SOP-008  |  Adding or Updating an API Key
+LEARNING OBJECTIVES
+By the end of this SOP you will be able to:
+Open the .env file safely in Notepad
+Add or update an API key using the correct format
+Verify the key is working by running the relevant agent
+Explain why API keys must never be committed to GitHub
+
+
+Steps
+Open File Explorer and navigate to C:\Projects\FunnyNotFunny\fnf-agents\
+Right-click the .env file > Open with > Notepad
+Find the line for the key you want to update
+Replace the value after the = sign with your new key
+Save the file — Ctrl+S
+Close Notepad
+Open a fresh PowerShell window and test the relevant agent
+
+NOTE: Correct format: KEY_NAME=value-with-no-quotes  — No spaces around =. No quote marks around the value.
+
+PRACTICE EXERCISE  —  API Key Update
+Scenario:
+Your Tavily API key has been rotated for security reasons. You have a new key and need to update the .env file and confirm the Research Agent still works.
+Your Tasks:
+Open .env in Notepad
+Find the TAVILY_API_KEY line
+Update it with the new key value
+Save the file
+Open a fresh PowerShell window from the fnf-agents folder
+Run the research agent with any topic to verify the new key works
+Success Criteria:
+.env file updated with new key in correct format
+Research agent runs successfully with live web search results
+No 401 Unauthorized errors appear for web_search tool calls
+
+
+KNOWLEDGE CHECK
+Answer these before moving to the next SOP:
+1.  What is the correct format for a key in the .env file?
+2.  Why should you open a fresh PowerShell window after updating .env?
+3.  What file prevents .env from being committed to GitHub?
+
+Answers are in Appendix A at the end of this manual.
+
+
+SOP-009  |  Adding a New Agent
+LEARNING OBJECTIVES
+By the end of this SOP you will be able to:
+Describe the three components every agent needs: system prompt, tools, handle_tool_call
+Create a new agent file that extends BaseAgent
+Define at least one tool definition with a name, description, and input schema
+Implement handle_tool_call to route tool calls to the correct method
+Explain how Claude uses the tool description to decide when to call a tool
+
+
+Purpose
+Add a new agent to the FNF stack to automate a new workflow
+Prerequisites
+Familiarity with Python classes, SOP-001 through SOP-007 complete
+Time required
+60+ minutes for first new agent
+
+
+The Three Things Every Agent Needs
+Component
+What it does
+system_prompt
+Tells Claude its role and how to behave. The most important factor in agent quality.
+tools list
+Tells Claude what tools are available. Claude reads the description to decide when to call each tool.
+handle_tool_call()
+Routes tool calls to the right Python method. When Claude calls a tool, this function runs.
+
+
+Steps
+Create a new file: agent_4_yourname.py in the fnf-agents folder
+Open base_agent.py and read the BaseAgent class
+Add the class structure — extend BaseAgent:
+
+from base_agent import BaseAgent
+
+
+class MyNewAgent(BaseAgent):
+    def __init__(self):
+        super().__init__("My Agent Name")
+        self.system_prompt = "Your role and instructions here"
+        self.tools = []  # add tool definitions below
+
+
+    def handle_tool_call(self, tool_name, tool_input):
+        if tool_name == "my_tool":
+            return self._my_tool(tool_input)
+        raise ValueError(f"Unknown tool: {tool_name}")
+
+Define each tool in the tools list — name, description, input_schema
+Write the method that runs each tool — prefix with underscore: _my_tool()
+Add a direct run block at the bottom for testing:
+
+if __name__ == "__main__":
+    agent = MyNewAgent()
+    result = agent.run("Your test goal here")
+    print(result)
+
+Test with: python agent_4_yourname.py
+Add any new API keys to .env and config.py
+Add the agent to run_agents.py following the existing pattern
+
+Planned Future Agents
+Agent
+File Name
+Purpose
+Email Agent
+agent_4_email.py
+Gmail — newsletter drafts and subscriber communications
+Social Agent
+agent_5_social.py
+Instagram and Facebook caption generation from briefs
+Analytics Agent
+agent_6_analytics.py
+Site performance reporting and content analytics
+
+
+PRACTICE EXERCISE  —  Build a Simple Test Agent
+Scenario:
+To consolidate your understanding of how agents work, build a minimal agent that has one tool: a tool that returns the current date and time. This exercise uses no external APIs — it just demonstrates the agent loop pattern.
+Your Tasks:
+Create a new file: agent_test.py in the fnf-agents folder
+Import BaseAgent and create a class that extends it
+Write a system_prompt that says: You are a test agent. Use the get_time tool when asked what time it is.
+Define one tool named get_time with a description
+Implement _get_time() using Python's datetime module
+Implement handle_tool_call() to route get_time calls
+Add a direct run block and test with: What time is it right now?
+Run: python agent_test.py and verify the agent calls the tool and returns the time
+Success Criteria:
+agent_test.py runs without syntax errors
+Agent loop shows [Loop 1] Thinking then [Tool] Calling: get_time
+Agent returns the current date and time in its final answer
+You can explain what each part of the code does
+
+
+KNOWLEDGE CHECK
+Answer these before moving to the next SOP:
+1.  What are the three things every agent built on BaseAgent needs?
+2.  How does Claude decide when to call a specific tool?
+3.  What is the purpose of the handle_tool_call() method?
+4.  What is the difference between an action and a filter in WordPress — and how does this relate to how agents work?
+
+Answers are in Appendix A at the end of this manual.
+
+
+Appendix A  |  Knowledge Check Answers
+Use these answers to verify your understanding after completing each SOP. Do not read ahead — attempt the questions first.
+
+SOP-001 Answers
+The .env file (containing all API keys) only loads when Python is run from the same directory the file is in. PowerShell opened elsewhere does not see the .env file.
+PS C:\Projects\FunnyNotFunny\fnf-agents>
+The .env file will still not load even if you navigate to the folder manually after opening PowerShell elsewhere. Python's load_dotenv() looks in the current working directory at the time Python starts.
+
+SOP-002 Answers
+[Loop 3] Thinking... means Claude has received a tool result and is now deciding what to do next — whether to call another tool or produce its final answer.
+Research briefs are saved to the output/ subfolder inside your fnf-agents folder.
+With Tavily configured the agent searches the live web for current news, reports, and data. Without Tavily it uses Claude's training knowledge which may be less current but still produces a useful brief.
+Multiple searches allow the agent to cover different angles of the topic — broad overview, specific policy, recent developments, affected communities — producing a more comprehensive brief than a single search would.
+
+SOP-003 Answers
+Posts are always created as drafts because advocacy content requires human editorial review before publication. Agents can make factual errors, tone mistakes, or apply incorrect brand voice — a human review step catches these.
+Write down the Post ID immediately from the terminal output. If missed, run python check_posts.py to retrieve it.
+Permalinks must be set to Post name in Settings > Permalinks. The Plain setting disables the REST API routes the agent uses.
+The agent runs get_wp_posts before creating a new post to check for existing posts on similar topics and avoid duplicate content.
+
+SOP-004 Answers
+Any three from: no guilt language, no alarmist framing, opens with fact or question, jargon explained, ends with one clear CTA, cause area connections named, correct category assigned.
+Edit the post in the WordPress editor to fix the issue before publishing.
+Posts > All Posts — drafts appear with a Draft label next to the title.
+
+SOP-005 Answers
+Run: python check_posts.py
+Type anything other than YES — for example No, cancel, or just press Enter.
+Verify the Post ID number matches the post you intend to publish, and the Title shown matches the post content you reviewed.
+
+SOP-006 Answers
+Draft, Publish, Pending, Private.
+Either the WordPress connection is failing (check SOAP-004 and SOAP-005) or the post was not actually created by the agent. Re-run the WordPress agent and watch for the success message with Post ID.
+
+SOP-007 Answers
+Research Agent (Agent 1) > Content Calendar Agent (Agent 2) > WordPress Publishing Agent (Agent 3).
+Research brief in output/ folder; Google Sheet for calendar updates; WordPress Admin > Posts > All Posts for the draft.
+Review the draft post using the Brand Voice Checklist before publishing.
+
+SOP-008 Answers
+KEY_NAME=value-with-no-quotes — no spaces around =, no quote marks around the value.
+Python's load_dotenv() reads the .env file when it starts. A fresh window forces a new Python start which re-reads the updated .env. An existing window still has the old values in memory.
+The .gitignore file lists .env so Git excludes it from commits.
+
+SOP-009 Answers
+system_prompt (Claude's role and instructions), tools list (what tools Claude can call), handle_tool_call() (routes tool calls to Python methods).
+Claude reads the description field of each tool definition. A clear, specific description that includes when to use it and example contexts produces much better tool selection than a vague description.
+handle_tool_call() acts as the router — when Claude decides to call a tool by name, this method receives the name and input, finds the matching Python method, runs it, and returns the result to Claude.
+Actions trigger code at a named point in execution (event-based), Filters modify a value passing through (transform-based). Agents are similar — tool calls are like actions (triggered at the right moment), while the system prompt shapes output like a filter (modifies how Claude responds throughout).
+
+FNF Agent Stack Training Manual  |  v1.0  |  March 2026  |  funnynfunny.com
