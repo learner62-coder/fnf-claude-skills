@@ -1,0 +1,279 @@
+
+FNF Agent Stack
+SOAP Troubleshooting Guide
+
+Symptom  |  Observation  |  Action  |  Prevention
+
+Mark R. Bracking  |  funnynfunny.com  |  Version 1.0  |  March 2026
+
+How to Use This Guide
+Each card covers one error using the SOAP format:
+
+Letter
+Stands For
+What It Tells You
+S
+Symptom
+What the error looks like — the exact message or behaviour you see
+O
+Observation
+What is actually happening underneath — the root cause
+A
+Action
+Step-by-step fix — follow in order
+P
+Prevention
+How to stop this happening again
+
+
+Each card also shows which agent is affected in brackets: [All Agents], [Agent 1], [Agent 2], or [Agent 3].
+
+Error Index
+ID
+Error
+Agent
+SOAP-001
+Terminal not in correct folder — .env not loading
+All Agents
+SOAP-002
+ANTHROPIC_API_KEY not set or invalid
+All Agents
+SOAP-003
+Tavily 401 Unauthorized — search failing
+Agent 1
+SOAP-004
+WordPress returns HTML instead of JSON
+Agent 3
+SOAP-005
+WordPress 401 Unauthorized
+Agent 3
+SOAP-006
+Post not appearing in WordPress Admin
+Agent 3
+SOAP-007
+Agent loops forever or hits loop limit
+All Agents
+SOAP-008
+SyntaxError when running a Python file
+All Agents
+SOAP-009
+ModuleNotFoundError — package not installed
+All Agents
+SOAP-010
+PowerShell pasting errors — term not recognised
+All Agents
+SOAP-011
+check_posts.py shows no posts found
+Agent 3
+SOAP-012
+publish command: unrecognized arguments
+Agent 3
+
+
+SOAP Cards
+SOAP-001  Terminal not in correct folder — .env not loading   [All Agents]
+S  SYMPTOM
+Terminal not in correct folder — .env not loading
+O  OBSERVATION
+API keys return None. Agents fail immediately with authentication errors even though keys are set. The .env file exists but is not being read.
+A  ACTION
+1. Close the current PowerShell window
+2. Open File Explorer and navigate to C:\Projects\FunnyNotFunny\fnf-agents\
+3. Click the address bar — type powershell — press Enter
+4. Confirm prompt shows: PS C:\Projects\FunnyNotFunny\fnf-agents>
+5. Run your command again
+P  PREVENTION
+Always open PowerShell from the fnf-agents folder using the address bar method. Never use Start Menu PowerShell and then navigate to the folder — load_dotenv() only looks in the current working directory.
+
+
+SOAP-002  AuthenticationError or ANTHROPIC_API_KEY not set   [All Agents]
+S  SYMPTOM
+AuthenticationError or ANTHROPIC_API_KEY not set
+O  OBSERVATION
+Python raises an error about the API key being invalid, missing, or None. The Anthropic client cannot initialise. This happens on the very first API call.
+A  ACTION
+1. Open .env in Notepad
+2. Check the ANTHROPIC_API_KEY line — confirm it starts with sk-ant-
+3. Check there are no spaces around the = sign
+4. Check there are no quotes around the value
+5. Save .env — Ctrl+S
+6. Open a fresh PowerShell window from the fnf-agents folder
+7. Run your command again
+P  PREVENTION
+Create a dedicated API key named fnf-agents at console.anthropic.com. Do not share the key with other tools. Store it only in .env — never in code files.
+
+
+SOAP-003  Search failed: 401 Client Error: Unauthorized — Tavily   [Agent 1]
+S  SYMPTOM
+Search failed: 401 Client Error: Unauthorized — Tavily
+O  OBSERVATION
+The Research Agent runs but all web_search tool calls fail with 401 Unauthorized. The agent falls back to training knowledge or cannot complete research.
+A  ACTION
+1. Go to tavily.com and sign in
+2. Navigate to Dashboard > API Keys
+3. Copy your key — it starts with tvly-
+4. Open .env in Notepad
+5. Update the TAVILY_API_KEY line: TAVILY_API_KEY=tvly-your-key-here
+6. Confirm no spaces around = and no quotes
+7. Save .env and open a fresh PowerShell window
+8. Run the research agent again
+P  PREVENTION
+Copy the Tavily key directly from the dashboard — do not type it manually. New Tavily accounts can take 1-2 minutes to activate — wait before testing if newly created.
+
+
+SOAP-004  WordPress agent returns HTML instead of JSON — Expecting value error   [Agent 3]
+S  SYMPTOM
+WordPress agent returns HTML instead of JSON — Expecting value error
+O  OBSERVATION
+WordPress is reachable (status 200) but returns the homepage HTML instead of JSON. Error message: Expecting value: line 1 column 1 (char 0). All three WordPress tool calls fail.
+A  ACTION
+1. Log into funnynfunny.com/wp-admin
+2. Go to Settings > Permalinks
+3. Select Post name under Common Settings
+4. Click Save Changes
+5. Confirm you see a success message
+6. Run the WordPress agent again
+P  PREVENTION
+The WordPress REST API requires pretty permalinks to be enabled. The Plain permalink setting disables REST API routing. Post name is the correct setting and should never be changed back to Plain.
+
+
+SOAP-005  WordPress 401 Unauthorized — authentication failed   [Agent 3]
+S  SYMPTOM
+WordPress 401 Unauthorized — authentication failed
+O  OBSERVATION
+WordPress is reachable but returns 401 on all API calls. The Application Password is either missing, incorrect, or the wrong type of password is being used.
+A  ACTION
+1. Log into funnynfunny.com/wp-admin
+2. Go to Users > Profile
+3. Scroll to Application Passwords
+4. Revoke any existing FNF Agents password
+5. Create a new one — name it FNF Agents
+6. Copy the new password immediately — it is only shown once
+7. Open .env in Notepad
+8. Update WP_APP_PASSWORD with the new password — keep the spaces
+9. Save .env and run check_posts.py to verify the connection
+P  PREVENTION
+Use Application Passwords only — never your WordPress login password. Application Passwords look like: xxxx xxxx xxxx xxxx xxxx xxxx. Keep the spaces when pasting into .env.
+
+
+SOAP-006  Post not appearing in WordPress Admin after agent runs   [Agent 3]
+S  SYMPTOM
+Post not appearing in WordPress Admin after agent runs
+O  OBSERVATION
+The WordPress agent reports success but the post cannot be found in Posts > All Posts. The post was formatted correctly but the API call to create it failed silently or the post is in an unexpected status.
+A  ACTION
+1. Run check_posts.py to check all statuses:
+   python check_posts.py
+2. If post appears — note the ID and proceed to publish
+3. If post does not appear — the creation call failed
+4. Verify SOAP-004 (permalinks) and SOAP-005 (auth) are resolved
+5. Run the WordPress agent again:
+   python run_agents.py --agent wordpress
+6. Watch the output carefully — look for the Post ID in the success message
+7. Run check_posts.py again to confirm
+P  PREVENTION
+Always note the Post ID printed in the agent output immediately after a successful run. If you miss it, run check_posts.py to recover it. The agent never publishes automatically — posts always land as drafts.
+
+
+SOAP-007  Agent loops forever or stops at maximum loop limit   [All Agents]
+S  SYMPTOM
+Agent loops forever or stops at maximum loop limit
+O  OBSERVATION
+The agent prints [Loop 1], [Loop 2]... and keeps going without completing, or stops with Agent stopped after 10 loops. This usually means a tool is failing on every call and Claude cannot find a way forward.
+A  ACTION
+1. Read the tool output carefully — look for repeated errors in the same tool
+2. Identify which tool is failing — it will show the same error each loop
+3. Fix the underlying tool error using the relevant SOAP card
+4. If tools seem fine, the system prompt may be too vague — add more detail
+5. To increase the loop limit temporarily, open config.py and change:
+   MAX_AGENT_LOOPS = 15
+6. Run the agent again after fixing the tool error
+P  PREVENTION
+Each tool should handle errors gracefully and return a clear error message rather than raising an exception. The agent uses the error message to decide what to do next — good error messages lead to better recovery.
+
+
+SOAP-008  SyntaxError when running a Python file   [All Agents]
+S  SYMPTOM
+SyntaxError when running a Python file
+O  OBSERVATION
+Python refuses to run a file with a SyntaxError. This means the file has invalid Python syntax, usually caused by a failed edit — a broken string, mismatched brackets, or a character encoding issue.
+A  ACTION
+1. Read the error — it shows the file name and line number
+   Example: File agent_3_wordpress.py, line 334 — SyntaxError
+2. Re-download the affected file from the Claude conversation
+3. Replace the broken file in your fnf-agents folder
+4. Run your command again
+5. If the error persists on the same line, open the file in VS Code
+   and look for broken string literals or mismatched quotes
+P  PREVENTION
+When downloading updated files from Claude, replace the entire file — do not copy-paste code into an existing file. Copy-pasting from chat can introduce invisible characters or encoding issues.
+
+
+SOAP-009  ModuleNotFoundError — No module named X   [All Agents]
+S  SYMPTOM
+ModuleNotFoundError — No module named X
+O  OBSERVATION
+Python cannot find a required package. This means the package was not installed, or pip installed to a different Python than the one running the script.
+A  ACTION
+1. Open PowerShell from the fnf-agents folder
+2. Run pip install with the missing package name:
+   pip install anthropic
+   pip install gspread google-auth
+3. If pip shows it is already installed, run:
+   pip install -r requirements.txt
+4. Run your command again
+5. If the error persists, your system may have multiple Python versions
+   Try: python -m pip install -r requirements.txt
+P  PREVENTION
+Always run pip install -r requirements.txt once after downloading the fnf-agents folder for the first time, and again after any update that adds new packages to requirements.txt.
+
+
+SOAP-010  PowerShell: term not recognised — pasting errors   [All Agents]
+S  SYMPTOM
+PowerShell: term not recognised — pasting errors
+O  OBSERVATION
+PowerShell shows CommandNotFoundException or ParserError for English words, backticks, or emoji. This happens when explanation text from Claude is accidentally pasted into the terminal alongside commands.
+A  ACTION
+1. These are not real errors — they are explanation text running as commands
+2. Press Enter to clear any pending input
+3. Only paste lines that start with python
+4. Never paste backtick blocks (```), explanation sentences, or emoji into PowerShell
+5. If the terminal gets stuck, press Ctrl+C to cancel and try again
+P  PREVENTION
+When copying commands from Claude, copy only the command line itself. A correct PowerShell command always starts with python, cd, or a similar system command — never with English prose or symbols like ``` or --.
+
+
+SOAP-011  check_posts.py shows no posts found under any status   [Agent 3]
+S  SYMPTOM
+check_posts.py shows no posts found under any status
+O  OBSERVATION
+Running check_posts.py returns none found for all statuses: DRAFT, PUBLISH, PENDING, PRIVATE. Either the connection is working but the site is empty, or the connection is failing silently.
+A  ACTION
+1. Verify the WordPress connection is working:
+   Open browser and go to: https://funnynfunny.com/wp-json/wp/v2/posts
+   You should see JSON — if you see HTML, fix SOAP-004 first
+2. Check WP_USERNAME and WP_APP_PASSWORD in .env are correct
+3. Verify the post was actually created — run the WordPress agent again
+4. After the agent runs, immediately check the output for Post ID
+5. Run check_posts.py again — the post should now appear
+P  PREVENTION
+Run check_posts.py immediately after every WordPress agent run to confirm the post was created. Do not rely on the agent success message alone — always verify in WordPress.
+
+
+SOAP-012  run_agents.py: error: unrecognized arguments: --publish   [Agent 3]
+S  SYMPTOM
+run_agents.py: error: unrecognized arguments: --publish
+O  OBSERVATION
+Running python run_agents.py --publish 291 fails with unrecognized arguments. The --publish flag was added in an update but the old version of run_agents.py is still in the folder.
+A  ACTION
+1. Download the updated run_agents.py from the Claude conversation
+2. Replace C:\Projects\FunnyNotFunny\fnf-agents\run_agents.py
+3. Run: python run_agents.py --publish 291
+4. If you cannot find the updated file, use the direct publish command:
+   python -c "from agent_3_wordpress import WordPressAgent; a = WordPressAgent(); print(a._publish_wp_post(291, 'Your Post Title Here'))"
+5. Type YES when prompted to confirm
+P  PREVENTION
+After any agent update from Claude, replace the entire file rather than patching it. Keep file version dates noted in your operating log so you know which version is current.
+
+
+FNF Agent Stack SOAP Troubleshooting Guide  |  v1.0  |  March 2026  |  funnynfunny.com
